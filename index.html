@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Filler Solver</title>
+        <meta name = "description" content = "Solves your game of GamePigeon Filler"> 
+        <link rel="stylesheet" href="style.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class = "topbar">
+            <p class="bigtitle">GamePigeon Filler Solver</p>
+            <a class="smallertext" style="margin-top: 10pt; margin-left: 20pt; color:rgb(27, 27, 104)" href="https://github.com/ItsAsShrimpleAsThat/FillerSolver">GitHub Link</a >
+        </div>
+
+        <div class="colorinputmenuflex">
+            <div class="colorinputflex">
+                <p class="smalltext">Enter your current game state:</p>
+                <canvas id="colorcanvas" class = "colorinput"></canvas>
+            </div>
+
+            <div class="settingsmenuflex areaborder">
+                <div class="smalltext settingsheader">
+                    <p id="searchsettingsheader">Search Settings</p>
+                </div>
+                
+                <div class="settingslayer" id="layer1">
+                    <div class="settingslayer1left">
+                        <label for="depthinput" class="smallertext inputlabel" id="searchdepthlbl">Search Depth:</label>
+                        <input type="text" value="20" class="inputfield" id="depthinput" name="depthinput" placeholder="20">
+                    </div>
+
+                    <div class="settingslayer1right">
+                        <label for="infinitedepth" class="smallertext inputlabel">Solve Mode:</label>
+                        <input type="checkbox" class="l1checkbox" name="infinitedepth" id="infinitedepth">
+                    </div>
+                </div>
+
+                <div class="settingslayer" id="layer2">
+                    <div class="settingslayer1left">
+                        <p class="smallertext currentturn" id="cturn">Current Turn:</p>
+                        <label for="mebox" class="smallertext inputlabel" id="melabel">Me:</label>
+                        <input type="checkbox" class="checkbox" name="mebox" id="mebox" checked />
+                        
+                        <label for="opponentbox" class="smallertext inputlabel" id="opponentlabel">Opponent:</label>
+                        <input type="checkbox" class="checkbox" name="opponentbox" id="opponentbox">
+                    </div>
+                </div>
+
+                <div class="settingslayer" id="layer3">
+                    <div class="settingslayer1left">
+                        <label for="iterdeep" class="smallertext inputlabel">Iterative Deepening:</label>
+                        <input type="checkbox" class="checkbox" name="iterdeep" id="iterdeep" checked />
+                        
+                        <label for="quiescence" class="smallertext inputlabel" id="opponentlabel">Quiescence Search</label>
+                        <input type="checkbox" class="checkbox" name="quiescence" id="quiescence" checked />
+                    </div>
+                </div>
+                
+                <div class="settingslayer" id="layer4">
+                    <label for="quidepth" class="smallertext inputlabel" id="quidepthlbl">Quiescence Search Limit:</label>
+                    <input type="text" value="12" class="inputfield" id="quidepth" name="quidepth" placeholder="12">
+                </div>
+
+                <div class="settingslayer" id="layer5">
+                    <button class="gobutton inputfield" id="gobutton">Start!</button>
+                    <button class="gobutton inputfield" id="stopbutton" disabled>Stop</button>
+                </div>
+                <div class="settingslayer" id="layer5">
+                    <button class="gobutton inputfield" id="playbutton">Enter Playmode!</button>
+                </div>
+            </div>
+            <div class="settingsmenuflex areaborder" style="width:230pt">
+                <div class="smalltext settingsheader">
+                    <p id="searchsettingsheader">Save/Load</p>
+
+                    <div class="settingslayer" style="justify-content: center;">
+                        <button class="gobutton inputfield" id="savebutton" style="margin-right: 10pt;">Save</button>
+                        <button class="gobutton inputfield" id="loadbutton" style="margin-right: 10pt;">Load</button>
+                        <button class="gobutton inputfield" id="delbutton">Delete</button>
+                    </div>
+                    <div class="settingslayer" style="margin-top: 5pt;">
+                        <p class="smallertext" style="padding-left: 15pt; padding-top: 0pt;">Current Save:</p>
+                    </div>
+                    <div class="settingslayer" style="justify-content: center;">
+                        <canvas id="savedColor" style="border: 3px rgb(35, 2, 50) solid; width: 200pt; height: 170pt; margin-top: 5pt;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="colorinputmenuflex" style="margin-top: -15pt;">
+            <div class="settingsmenuflex areaborder" style="height: 200pt; width: 600pt">
+                <div class="smalltext settingsheader">
+                    <p id="searchsettingsheader">Search Stats and Result</p>
+                </div>
+
+                <div style="display: flex; flex-direction: row; margin-top: 0pt; margin-bottom: 15pt; margin-left: 10pt;">
+                    <p class="smallertext" style="font-size: 20pt;">Best Move:</p>
+                    <div class="square" style="margin-left: 10pt;" id="resultsquare"></div>
+                    <p class="smallertext result" id="resultturntext">for me</p>
+                </div>
+
+                <div style="display: flex; flex-direction: row;">
+                    <div class="settingslayer1left" style="margin-left: 10pt; flex-direction: column; width: 45%">
+                        <div class="settingslayer" id="layer1">
+                            <p class="smallertext" id="numSearchedPos">Num Searched Positions: 0</p>
+                        </div>
+                        <div class="settingslayer" style="margin-top: 10pt;">
+                            <p class="smallertext" id="numQuiSearchedPos">Num Searched Pos (Qui search): 0</p>
+                        </div>
+                        
+                    </div>
+                    <div class="settingslayer1right" style="margin-right: 10pt; flex-direction: column; width: 45%">
+                        <div class="settingslayer" id="layer1">
+                            <p class="smallertext" id="numNodes">Num Nodes: 0</p>
+                        </div>
+                        <div class="settingslayer" style="margin-top: 10pt;">
+                            <p class="smallertext" id="numQuiNodes">Num Nodes (Qui search): 0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="settingsmenuflex areaborder" style="height: 200pt; width: 350pt">
+                <div class="smalltext settingsheader">
+                    <p id="searchsettingsheader">Playmode</p>
+                    <div class="settingslayer" style="margin-top: 7pt;">
+                        <p class="smalltext" style="margin-left: 10pt;">Current Status: </p>
+                        <p class="smallertext" style="margin-left: 8pt; margin-top: 6pt;" id="playstatus">Playmode is off</p>
+                    </div>
+                    <div class="settingslayer" style="margin-top: 18pt; justify-content: center;">
+                        <button class="gobutton inputfield" id="saveplaymodesession" style="width: 100pt; margin-right: 5pt;">Save session</button>
+                        <button class="gobutton inputfield" id="loadplaymodesession" style="width: 100pt; margin-right: 7pt;">Load session</button>
+                        <div style="margin-bottom: 0pt;">
+                            <label for="autoloadsession" class="smallertext inputlabel">Auto load save?</label>
+                            <input type="checkbox" class="checkbox" name="autoloadsession" id="autoloadsession" style="margin-left: -1pt;" checked />
+                        </div>
+                    </div>
+                    <div class="settingslayer" style="margin-top: 10pt; justify-content: center;">
+                        <button class="gobutton inputfield" id="playandoppplayed" style="width: 150pt;">I played my move!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="colorinputmenuflex" style="margin-top: -15pt;">
+            <div class="settingsmenuflex areaborder" style="height:auto; width: 600pt">
+                <div class="smalltext settingsheader" style="width: 100%;">
+                    <p id="searchsettingsheader">Search Breakdown</p>
+                    <p class="smallertext" style="margin-top: -20pt; margin-bottom: 7pt; color: gray">(only for iterative deepening searches)</p>
+                    <table class="breakdowntable" id="statsbreakdowntable" style="margin-bottom: 15pt;">
+                        <tr>
+                            <th>Depth</th>
+                            <th>Searched Positions</th>
+                            <th>Quiescence Search Pos</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        <script src="solver.js"></script>
+    </body>
+</html>
